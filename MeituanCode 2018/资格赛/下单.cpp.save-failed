@@ -1,0 +1,105 @@
+/*
+Problem:
+Author:QiZhao
+Data:2018-03-
+Description:
+Copyright  2018 QiZhao. All rights reserved.
+*/
+#include<bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+ll n, m;
+double ans1 = 0;
+int ans2 = 0;
+int flag = 0;
+vector<double> ans;
+
+
+struct stu
+{
+    int a;
+    int flag;
+    stu(int aa, int flagg)
+    {
+        a = aa;
+        flag = flagg;
+    }
+};
+vector<stu> v;
+    vector<stu> vv;
+bool operator <(const stu&s1, const stu&s2)
+{
+    return s1.a < s2.a;
+}
+int shaobing=-0xffff;
+void Dfs(int cha,int value)
+{
+    if(cha<=0)
+    {
+        ans.push_back(ans2+value);
+        return;
+    }
+    int i;
+    for(i = 0; i < n; i++)
+    {
+        Dfs(ans2-v[i].a,value+v[i].a);
+    }
+}
+int main()
+{
+    //freopen("in.txt", "r", stdin);
+    //freopen("out.txt", "w", stdout);
+    //cin.sync_with_stdio(false);
+    cin >> n >> m;
+    for(int i = 0; i < n; i++)
+    {
+        int a, flag;
+        cin >> a >> flag;
+        stu temp(a, flag);
+        ans2 += a;
+        v.push_back(temp);
+    }
+    for(int i = 0; i < m; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        stu temp(a, b);
+        vv.push_back(temp);
+    }
+    //method 1
+    for(int i = 0; i < n; i++)
+    {
+        if(v[i].flag == 1)
+            ans1 += v[i].a * 0.8;
+        else
+            ans1 += v[i].a;
+    }
+    //method 2
+    for(int i = 0; i < m; i++)
+    {
+        //cout<<vv[i].a<<endl;
+        if(ans2 <= vv[i].a)
+        {
+            //cout<<vv[i].flag<<endl;
+            if(vv[i].flag > flag)
+                flag = vv[i].flag;
+        }
+    }
+    ans.push_back(ans1);
+    ans.push_back(double(ans2 - flag));
+    //coudan
+    for(int i = 0; i < m; i++)
+    {
+        if(vv[i].a < ans2)
+        {
+            int cha = vv[i].a - ans2;
+            Dfs(cha,0);
+        }
+    }
+    sort(ans.begin(),ans.end());
+    cout << ans[0] << endl;
+    return 0;
+}
+
